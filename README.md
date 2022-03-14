@@ -39,6 +39,17 @@ https://gokiting.herokuapp.com
 
 <br>
 
+# DATABASE ERD Diagram
+
+<object data="https://github.com/bastoune57/gokiting_back_end/blob/main/docs/ERD_gokiting.pdf" type="application/pdf" width="700px" height="700px">
+    <embed src="https://github.com/bastoune57/gokiting_back_end/blob/main/docs/ERD_gokiting.pdf">
+        <p>This browser does not support PDFs. Please download the PDF to view it: <a href="https://github.com/bastoune57/gokiting_back_end/blob/main/docs/ERD_gokiting.pdf">Download PDF</a>.</p>
+    </embed>
+</object>
+
+
+<br>
+
 # REST API CLIENT  
 
 ## Available APIs  
