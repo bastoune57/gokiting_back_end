@@ -33,6 +33,10 @@ docker exec -it server-web-1 python manage.py migrate
 
 <br>
 
+# Online Version  
+
+https://gokiting.herokuapp.com
+
 # REST API CLIENT  
 
 ## Available APIs  
