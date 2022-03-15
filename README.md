@@ -39,12 +39,6 @@ https://gokiting.herokuapp.com
 
 <br>
 
-# Documentation  
-
-http://127.0.0.1:8000/docs  
-
-<br>
-
 # DATABASE ERD Diagram
 
 <object data="https://github.com/bastoune57/gokiting_back_end/blob/main/docs/ERD_gokiting.pdf" type="application/pdf" width="700px" height="700px">
@@ -58,7 +52,11 @@ http://127.0.0.1:8000/docs
 
 # REST API CLIENT  
 
+## Overall Documentation  
+
 ## Available APIs  
+
+http://127.0.0.1:8000/docs  
 
 ### General info  
 

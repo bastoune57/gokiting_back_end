@@ -10,7 +10,7 @@ class LocationSerializer(serializers.HyperlinkedModelSerializer):
     """
     class Meta:
         model = Location
-        fields = ['url', 'city', 'country', 'ZIP', 'longitude', 'latitude']
+        fields = ['url', 'city', 'country', 'longitude', 'latitude']
 
 
 class BaseLocationSerializer(serializers.HyperlinkedModelSerializer):

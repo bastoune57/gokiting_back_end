@@ -18,9 +18,8 @@ class Location(models.Model):
     """
     city = models.CharField(_('city'), max_length=150, blank=False)
     country = models.CharField(_('country'), max_length=150, blank=False)
-    ZIP = models.CharField(_('ZIP'), max_length=10, blank=True, default=00000)
-    longitude = models.DecimalField(_('longitude'), max_digits=6, decimal_places=5, blank=True, default=0.0)
-    latitude = models.DecimalField(_('latitude'), max_digits=6, decimal_places=5, blank=True, default=0.0)
+    longitude = models.DecimalField(_('longitude'), max_digits=9, decimal_places=6, blank=False)
+    latitude = models.DecimalField(_('latitude'), max_digits=9, decimal_places=6, blank=False)
     class Meta:
         unique_together = ("city", "country")
     def __str__(self):
