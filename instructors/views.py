@@ -30,6 +30,7 @@ class StatsLanguageView(generics.ListAPIView):
     """
     API endpoint that allows languages statistics to be viewed.
     """
+    serializer_class = LanguageSerializer
     def summarize(self, request, *args, **kwargs):
         """This can be moved to a Mixin class."""
         # make sure the filters of the parent class get applied
@@ -51,6 +52,7 @@ class StatsCategoryView(generics.ListAPIView):
     """
     API endpoint that allows categories statistics to be viewed.
     """
+    serializer_class = CategorySerializer
     def summarize(self, request, *args, **kwargs):
         """This can be moved to a Mixin class."""
         # make sure the filters of the parent class get applied

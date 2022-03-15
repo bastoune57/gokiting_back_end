@@ -14,7 +14,11 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
+from rest_framework import permissions
+
+from drf_yasg import views
+from drf_yasg import openapi
 
 # my router patch
 from .patches import routers
@@ -27,8 +31,22 @@ router = routers.DefaultRouter()
 router.extend(instructors_router) # include router from instructors app
 router.extend(locations_router) # include router from locations app
 
+docs_view = views.get_schema_view(
+   openapi.Info(
+      title="Gokiting API Documentation",
+      default_version='v1',
+      description="All Apis description for gokiting project",
+      terms_of_service="None so far?",
+      contact=openapi.Contact(email="info@gokiting.io"),
+      license=openapi.License(name="which license? (BSD License)"),
+   ),
+   public=True,
+   permission_classes=[permissions.AllowAny],
+)
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    re_path(r'^docs/$', docs_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('', include('instructors.urls')), # include urls from instructors app
     path('', include('locations.urls')), # include urls from locations app
     path('', include(router.urls)), # add routers url

@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'locations', # my app
     'rest_framework', # framework to generate REST API
     'corsheaders', # to check connexions origin
+    'drf_yasg', # framework to generate REST API documentation
 ]
 
 MIDDLEWARE = [
@@ -146,7 +147,7 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 # for white noise
-STATIC_ROOT = BASE_DIR / "staticfiles"
+STATIC_ROOT = BASE_DIR / "static"
 
 # https://www.devhandbook.com/django/user-profile/
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media') # Directory where uploaded media is saved.
@@ -160,7 +161,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 REST_FRAMEWORK = {
     # https://www.geeksforgeeks.org/adding-pagination-in-apis-django-rest-framework/
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
-    'PAGE_SIZE': 10
+    'PAGE_SIZE': 10,
+    #'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
 }
 
 CORS_ORIGIN_ALLOW_ALL = True
