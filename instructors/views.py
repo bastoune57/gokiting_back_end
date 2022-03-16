@@ -9,6 +9,8 @@ from django.contrib.auth.models import Group
 from .models import User, Language, Category
 
 from django.db.models import Count
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 
 class GroupViewSet(viewsets.ModelViewSet):
     """
@@ -134,3 +136,41 @@ class UserViewSet(viewsets.ModelViewSet):
             queryset.order_by('-date_joined')
 
         return queryset
+
+    """
+    Swagger manual information added for documentation building
+    """
+    @swagger_auto_schema(
+        manual_parameters=[
+            openapi.Parameter('id',
+            openapi.IN_QUERY,
+            description='Allows exact match filtering on id',
+            type=openapi.TYPE_INTEGER),
+            openapi.Parameter('rating',
+            openapi.IN_QUERY,
+            description='Allows exact match filtering on rating',
+            type=openapi.TYPE_INTEGER),
+            openapi.Parameter('last_name',
+            openapi.IN_QUERY,
+            description='Allows exact match filtering on last_name',
+            type=openapi.TYPE_STRING),
+            openapi.Parameter('first_name',
+            openapi.IN_QUERY,
+            description='Allows exact match filtering on first_name',
+            type=openapi.TYPE_STRING),
+            openapi.Parameter('language',
+            openapi.IN_QUERY,
+            description='Allows exact match filtering on language (Ex: ?language=en).',
+            type=openapi.TYPE_STRING),
+            openapi.Parameter('asc',
+            openapi.IN_QUERY,
+            description='Allows ascending sorting of the results based on field names (Ex: ?asc=last_name). It is dominant compared to desc filtering.',
+            type=openapi.TYPE_STRING),
+            openapi.Parameter('desc',
+            openapi.IN_QUERY,
+            description='Allows descending sorting of the results based on field names (Ex: ?desc=last_name). If asc is specified, desc filtering is canceled',
+            type=openapi.TYPE_STRING),
+        ],
+    )
+    def list(self, request, *args, **kwargs):
+        return super(UserViewSet, self).list(request, *args, **kwargs)

@@ -4,6 +4,8 @@ from .serializers import TimePeriodSerializer, BaseLocationSerializer
 from .serializers import TempLocationSerializer
 from .models import Location, TimePeriod
 from .models import BaseLocation, TempLocation
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 
 class BaseLocationViewSet(viewsets.ModelViewSet):
     """
@@ -50,3 +52,17 @@ class LocationViewSet(viewsets.ModelViewSet):
             queryset = queryset.filter(city__icontains=search_string) | queryset.filter(country__icontains=search_string)
 
         return queryset
+
+    """
+    Swagger manual information added for documentation building
+    """
+    @swagger_auto_schema(
+        manual_parameters=[
+            openapi.Parameter('s',
+            openapi.IN_QUERY,
+            description='Allows part-match filtering on first_name OR last_name (both results combined, ex: ?s=Cabar).',
+            type=openapi.TYPE_STRING),
+        ],
+    )
+    def list(self, request, *args, **kwargs):
+        return super(LocationViewSet, self).list(request, *args, **kwargs)
