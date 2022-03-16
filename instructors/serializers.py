@@ -3,7 +3,7 @@ from rest_framework import serializers
 
 from .models import User, Language, Category
 from locations.models import BaseLocation, TempLocation
-from locations.serializers import BaseLocationSerializer, TempLocationSerializer
+from locations.serializers import CreateNestedBaseLocationSerializer, TempLocationSerializer, add_or_create_base_location
 
 
 class GroupSerializer(serializers.HyperlinkedModelSerializer):
@@ -56,7 +56,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
     #many=True
     categories = LinkedCategorySerializer(required=False, many=True)
     languages = NestedLanguageSerializer(required=False, many=True)
-    baselocations = BaseLocationSerializer(required=False, many=True)
+    baselocations = CreateNestedBaseLocationSerializer(required=False, many=True)
     templocations = TempLocationSerializer(required=False, many=True)
     class Meta:
         model = User
@@ -99,12 +99,11 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
                 Language.objects.create(user=user, **item)
         # if there were base locations then add it/them
         if baselocations_data is not None:
-            for item in baselocations_data:
-                BaseLocation.objects.create(user=user, **item)
-        # if there were temp locations then add it/them
-        if templocations_data is not None:
-            for item in templocations_data:
-                TempLocation.objects.create(user=user, **item)
+            locations_list = add_or_create_base_location(user=user, baselocations_data=baselocations_data)
+        # # if there were temp locations then add it/them
+        # if templocations_data is not None:
+        #     for item in templocations_data:
+        #         TempLocation.objects.create(user=user, **item)
         
         # return created user
         return user

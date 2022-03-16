@@ -169,3 +169,18 @@ CORS_ORIGIN_ALLOW_ALL = True
 
 # https://docs.djangoproject.com/fr/4.0/topics/auth/customizing/
 AUTH_USER_MODEL = 'instructors.User'
+
+# logging settings
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'DEBUG',
+    },
+}
