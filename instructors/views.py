@@ -1,12 +1,9 @@
 from rest_framework import viewsets
 from rest_framework import permissions
-from rest_framework import generics
-from rest_framework.response import Response
 from .serializers import UserSerializer#, ModifyUserSerializer
-from .serializers import CategorySerializer
 from .serializers import GroupSerializer
 from django.contrib.auth.models import Group
-from .models import User, Category
+from .models import User
 
 from languages.models import Language
 
@@ -21,29 +18,6 @@ class GroupViewSet(viewsets.ModelViewSet):
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
     permission_classes = [permissions.IsAuthenticated]
-
-class CategoryViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows categories to be viewed or edited.
-    """
-    queryset = Category.objects.all()
-    serializer_class = CategorySerializer
-    #permission_classes = [permissions.IsAuthenticated]
-
-class StatsCategoryView(generics.ListAPIView):
-    """
-    API endpoint that allows categories statistics to be viewed.
-    """
-    serializer_class = CategorySerializer
-    def summarize(self, request, *args, **kwargs):
-        """This can be moved to a Mixin class."""
-        # make sure the filters of the parent class get applied
-        queryset = Category.objects.values('category').annotate(category_count=Count('pk')).order_by('category')
-        return Response(queryset)
-
-    def get(self, request, *args, **kwargs):
-        return self.summarize(request, *args, **kwargs)
-
 class UserViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to be viewed or edited.

@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'instructors', # my app
     'locations', # my app
     'languages', # my app
+    'categories', # my app
     'rest_framework', # framework to generate REST API
     'corsheaders', # to check connexions origin
     'drf_yasg', # framework to generate REST API documentation

@@ -17,6 +17,10 @@ from django.contrib import admin
 from django.urls import path, include, re_path
 from rest_framework import permissions
 
+from rest_framework import routers
+from django.conf import settings
+from django.conf.urls.static import static
+
 from drf_yasg import views
 from drf_yasg import openapi
 
@@ -26,12 +30,14 @@ from .patches import routers
 from instructors.urls import router as instructors_router
 from locations.urls import router as locations_router
 from languages.urls import router as languages_router
+from categories.urls import router as categories_router
 
 # instantiate custom router that can aggregate several ones 
 router = routers.DefaultRouter()
 router.extend(instructors_router) # include router from instructors app
 router.extend(locations_router) # include router from locations app
 router.extend(languages_router) # include router from languages app
+router.extend(categories_router) # include router from categories app
 
 docs_view = views.get_schema_view(
    openapi.Info(
@@ -47,13 +53,17 @@ docs_view = views.get_schema_view(
 )
 
 urlpatterns = [
+    # admin page
     path('admin/', admin.site.urls),
+    # docs page
     re_path(r'^docs/$', docs_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('', include('instructors.urls')), # include urls from instructors app
     path('', include('locations.urls')), # include urls from locations app
+    path('', include('languages.urls')), # include urls from locations app
+    path('', include('categories.urls')), # include urls from locations app
     path('', include(router.urls)), # add routers url
     # Django auth page
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 
