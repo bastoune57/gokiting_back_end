@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'instructors', # my app
     'locations', # my app
+    'languages', # my app
     'rest_framework', # framework to generate REST API
     'corsheaders', # to check connexions origin
     'drf_yasg', # framework to generate REST API documentation

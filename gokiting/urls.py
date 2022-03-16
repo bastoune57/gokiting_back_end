@@ -25,11 +25,13 @@ from .patches import routers
 
 from instructors.urls import router as instructors_router
 from locations.urls import router as locations_router
+from languages.urls import router as languages_router
 
 # instantiate custom router that can aggregate several ones 
 router = routers.DefaultRouter()
 router.extend(instructors_router) # include router from instructors app
 router.extend(locations_router) # include router from locations app
+router.extend(languages_router) # include router from languages app
 
 docs_view = views.get_schema_view(
    openapi.Info(
@@ -50,6 +52,8 @@ urlpatterns = [
     path('', include('instructors.urls')), # include urls from instructors app
     path('', include('locations.urls')), # include urls from locations app
     path('', include(router.urls)), # add routers url
+    # Django auth page
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 ]
 
 

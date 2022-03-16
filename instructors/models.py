@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.utils.translation import gettext_lazy as _
 from phonenumber_field.modelfields import PhoneNumberField
-from languages.fields import LanguageField
+
 #from django.core.validators import MaxValueValidator, MinValueValidator, MinLengthValidator
 
 #https://www.fomfus.com/articles/how-to-use-email-as-username-for-django-authentication-removing-the-username/
@@ -71,20 +71,6 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.email
-
-class Language (models.Model):
-    """
-    Language model (move to Language app)
-    """
-    user = models.ForeignKey(
-        'instructors.User',
-        on_delete=models.CASCADE,
-        blank=False,
-        related_name='languages',
-    )
-    language = LanguageField(blank=False)
-    def __str__(self):
-        return self.language
 
 class Category (models.Model):
     """

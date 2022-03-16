@@ -10,7 +10,6 @@ Add app views to app router
 router = routers.DefaultRouter()
 router.register(r'users', views.UserViewSet, basename='user') # basename has to be specified because of 2 different serializers
 router.register(r'groups', views.GroupViewSet)
-router.register(r'languages', views.LanguageViewSet)
 router.register(r'categories', views.CategoryViewSet)
 
 """
@@ -21,7 +20,4 @@ urlpatterns = [
     #path('', include(router.urls)), ---> not included because it is done at project level (multi app router)
     # View for categories statistics
     path('cat-stats/', views.StatsCategoryView.as_view(), name='statscategory-list'),
-    path('lan-stats/', views.StatsLanguageView.as_view(), name='statslanguage-list'),
-    # Django auth page
-    path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -4,9 +4,6 @@ from .models import Location, TimePeriod, BaseLocation
 from .models import TempLocation
 import logging
 
-from django.db import IntegrityError
-from django.http import HttpResponse
-
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
 

@@ -1,10 +1,11 @@
 from django.contrib.auth.models import Group
 from rest_framework import serializers
 
-from .models import User, Language, Category
-from locations.models import BaseLocation, TempLocation
-from locations.serializers import CreateNestedBaseLocationSerializer, TempLocationSerializer, add_or_create_base_location
-
+from .models import User, Category
+from locations.serializers import CreateNestedBaseLocationSerializer
+from locations.serializers import TempLocationSerializer, add_or_create_base_location
+from languages.models import Language
+from languages.serializers import NestedLanguageSerializer
 
 class GroupSerializer(serializers.HyperlinkedModelSerializer):
     """
@@ -13,23 +14,6 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Group
         fields = ['url', 'name']
-
-class LanguageSerializer(serializers.HyperlinkedModelSerializer):
-    """
-    Serializer for language objects
-    """
-    class Meta:
-        model = Language
-        fields = ['url', 'user', 'language']
-
-class NestedLanguageSerializer(LanguageSerializer):
-    """
-    Serializer for the language objects when nested in users
-    """
-    def get_fields(self, *args, **kwargs):
-        fields = super(NestedLanguageSerializer, self).get_fields(*args, **kwargs)
-        fields['user'].read_only = True
-        return fields
 
 class CategorySerializer(serializers.HyperlinkedModelSerializer):
     """

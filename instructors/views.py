@@ -3,10 +3,12 @@ from rest_framework import permissions
 from rest_framework import generics
 from rest_framework.response import Response
 from .serializers import UserSerializer#, ModifyUserSerializer
-from .serializers import LanguageSerializer, CategorySerializer
+from .serializers import CategorySerializer
 from .serializers import GroupSerializer
 from django.contrib.auth.models import Group
-from .models import User, Language, Category
+from .models import User, Category
+
+from languages.models import Language
 
 from django.db.models import Count
 from drf_yasg.utils import swagger_auto_schema
@@ -19,28 +21,6 @@ class GroupViewSet(viewsets.ModelViewSet):
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
     permission_classes = [permissions.IsAuthenticated]
-
-class LanguageViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows languages to be viewed or edited.
-    """
-    queryset = Language.objects.all()
-    serializer_class = LanguageSerializer
-    #permission_classes = [permissions.IsAuthenticated]
-
-class StatsLanguageView(generics.ListAPIView):
-    """
-    API endpoint that allows languages statistics to be viewed.
-    """
-    serializer_class = LanguageSerializer
-    def summarize(self, request, *args, **kwargs):
-        """This can be moved to a Mixin class."""
-        # make sure the filters of the parent class get applied
-        queryset = Language.objects.values('language').annotate(language_count=Count('pk')).order_by('language')
-        return Response(queryset)
-
-    def get(self, request, *args, **kwargs):
-        return self.summarize(request, *args, **kwargs)
 
 class CategoryViewSet(viewsets.ModelViewSet):
     """

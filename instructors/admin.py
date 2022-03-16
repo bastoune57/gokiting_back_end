@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as DjangoUserAdmin
-from .models import User, Language, Category
+from .models import User, Category
 from django.utils.translation import gettext_lazy as _
 
 """
@@ -32,5 +32,4 @@ class UserAdmin(DjangoUserAdmin):
     ordering = ('email',)
 
     # register other models
-    admin.site.register(Language)
     admin.site.register(Category)
