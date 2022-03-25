@@ -65,8 +65,8 @@ class User(AbstractUser):
     avatar_url = models.ImageField(default='https://github.com/CMQNordic/Assets/blob/main/images/unknown-person-icon-27.jpg', upload_to='profile_pics')
     rating = models.IntegerField(default=3)
     is_instructor = models.BooleanField(default=False)
-    title = models.CharField(max_length=1000, default="")
-    description = models.CharField(max_length=5000, default="")
+    title = models.CharField(max_length=1000, default="", blank=True)
+    description = models.CharField(max_length=5000, default="", blank=True)
     phone = PhoneNumberField(default='+12125552368', blank=True)
 
     def __str__(self):
