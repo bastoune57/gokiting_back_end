@@ -62,7 +62,7 @@ class User(AbstractUser):
     # "classic" fields added to our User model
     first_name = models.CharField(_('first name'), max_length=150, blank=True)
     last_name = models.CharField(_('last name'), max_length=150, blank=True)
-    avatar_url = models.ImageField(default='https://github.com/CMQNordic/Assets/blob/main/images/unknown-person-icon-27.jpg', upload_to='profile_pics')
+    avatar_url = models.ImageField(default='profile_pics/einstein_EqBibwO.jpeg', upload_to='profile_pics')
     rating = models.IntegerField(default=3)
     is_instructor = models.BooleanField(default=False)
     title = models.CharField(max_length=1000, default="", blank=True)
