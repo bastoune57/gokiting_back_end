@@ -10,8 +10,8 @@ def get_location (id):
         "city": "tcity"+str(id),
         "country": "tcountry"+str(id)
         ,
-        "longitude": "9.800000",
-        "latitude": "8.900000"
+        "longitude": "9.8000",
+        "latitude": "8.9000"
       }
 
 def get_full_user (id):

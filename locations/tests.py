@@ -31,7 +31,7 @@ class TestLocation(APITestCase):
         response = self.client.post(self.url, data={'city': 'tci', 'country': 'tco', 'longitude': '8.9', 'latitude': '8.9'})
         self.assertEqual(response.status_code, 201)
         # check duplicate 
-        response = self.client.post(self.url, data={'city': 'tci', 'country': 'tco', 'longitude': '5.9', 'latitude': '5.9'})
+        response = self.client.post(self.url, data={'city': 'tci', 'country': 'tco', 'longitude': '8.9', 'latitude': '8.9'})
         self.assertEqual(response.status_code, 400)
 
     def test_create_base(self):
