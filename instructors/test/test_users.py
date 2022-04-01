@@ -2,24 +2,105 @@ from django.urls import reverse_lazy
 from rest_framework.test import APITestCase
 from instructors.models import User
 from instructors.serializers import UserSerializer
+from languages import languages as lang
+from categories.models import WATER_SPORT_CHOICES
+
+def get_location (id):
+    return {
+        "city": "tcity"+str(id),
+        "country": "tcountry"+str(id)
+        ,
+        "longitude": "9.800000",
+        "latitude": "8.900000"
+      }
+
+def get_full_user (id):
+    return {
+        "email": "ilablfbkljerfkjbas"+str(30+id)+"@t.com",
+        'first_name': 'bastien',
+        'last_name': 'hamet',
+        'is_instructor': False,
+        'rating': 5,
+        'phone': '+12125552368',
+        'title': '',
+        'description': '',
+        "languages": [
+        {
+        "language": lang.LANGUAGES[0+id][0]
+        },
+        {
+        "language": lang.LANGUAGES[1+id][0]
+        }
+        ],
+        'categories': [
+        {
+        "category": WATER_SPORT_CHOICES[0+id][0]
+        },
+        {
+        "category": WATER_SPORT_CHOICES[1+id][0]
+        }
+        ],
+        'baselocations': [
+        {
+        "location": get_location(0+id)
+        },
+        {
+        "location": get_location(1+id)
+        }
+        ],
+        'templocations': []
+        }
 
 class TestUser(APITestCase):
     url = reverse_lazy('user-list')
 
-    def test_list(self):
-        ## actually already covered in test create
-        print("Test User -> list")
+    def put_data_test(self, input_data):
+        """ Test update (PUT) using a data to be sent (nested object not verified)"""
+        response = self.client.put(self.user_url, data=input_data, format='json')
+        res = response.json().copy()
+        response.json().pop("languages")
+        response.json().pop("categories")
+        response.json().pop("baselocations")
+        response.json().pop("templocations")
+        input_data.pop("languages")
+        input_data.pop("categories")
+        input_data.pop("baselocations")
+        input_data.pop("templocations")
+        self.assertEqual(response.status_code, 200)       
+        return res
+
+    def put_field_test(self, name, value):
+        """ Test update (PUT) of any direct field of user """
+        if name == "email":
+            response = self.client.put(self.user_url, data={name: value}, format='json')
+        else:
+            response = self.client.put(self.user_url, data={"email": self.user_email, name: value}, format='json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()[name], value)
+        return response
+
+    def compare_nested (self, src, dest):
+        # check languages correctness
+        self.assertEqual(len(src["languages"]), len(dest["languages"]))
+        for i in range(len(src["languages"])):
+            self.assertEqual(src["languages"][i]["language"], dest["languages"][i]["language"])
+        # check categories correctness
+        self.assertEqual(len(src["categories"]), len(dest["categories"]))
+        for i in range(len(src["categories"])):
+            self.assertEqual(src["categories"][i]["category"], dest["categories"][i]["category"])
+        # check base location correctness
+        self.assertEqual(len(src["baselocations"]), len(dest["baselocations"]))
+        for i in range(len(src["baselocations"])):
+            self.assertEqual(src["baselocations"][i]["location"]["city"], dest["baselocations"][i]["location"]["city"])
+            self.assertEqual(src["baselocations"][i]["location"]["country"], dest["baselocations"][i]["location"]["country"])
+            self.assertEqual(src["baselocations"][i]["location"]["longitude"], dest["baselocations"][i]["location"]["longitude"])
+            self.assertEqual(src["baselocations"][i]["location"]["latitude"], dest["baselocations"][i]["location"]["latitude"])
+
 
     def test_create(self):
         print("Test User -> create")
         # check empty
         self.assertFalse(User.objects.exists())
-        # check no first_name
-        response = self.client.post(self.url, data={'email': 'truc@truc.com', 'last_name': 'hamet'})
-        self.assertEqual(response.status_code, 400)
-        # check no last_name
-        response = self.client.post(self.url, data={'email': 'truc@truc.com', 'first_name': 'hamet'})
-        self.assertEqual(response.status_code, 400)
         # check no email
         response = self.client.post(self.url, data={'first_name': 'truc', 'last_name': 'hamet'})
         self.assertEqual(response.status_code, 400)
@@ -36,19 +117,66 @@ class TestUser(APITestCase):
         response = self.client.post(self.url, data={'email': 'b@h.com', 'first_name': 'bastien', 'last_name': 'hamet', 'is_instructor': 'truc'})
         self.assertEqual(response.status_code, 400)
         # check correct creation
-        response = self.client.post(self.url, data={'email': 'b@h.com', 'first_name': 'bastien', 'last_name': 'hamet', 'is_instructor': False, 'location': 'Cabarete', 'rating': 5})
+        response = self.client.post(self.url, data={'email': 'b@h.com', 'first_name': 'bastien', 'last_name': 'hamet', 'is_instructor': False, 'rating': 5})
         self.assertEqual(response.status_code, 201)
-        #print(response.json())
-        excepted = {'id': 5, 'url': 'http://testserver/users/5/', 'email': 'b@h.com', 'first_name': 'bastien', 'last_name': 'hamet', 'is_instructor': False, 'avatar': 'http://testserver/media/einstein.jpeg', 'location': 'Cabarete', 'rating': 5, 'phone': '+12125552368', 'title': '', 'description': '', 'languages': [], 'categories': []}
+        # check output correctness
+        user_id = response.json()['id']
+        excepted = {'id': user_id, 'url': 'http://testserver/users/'+str(user_id)+'/', 'email': 'b@h.com', 'first_name': 'bastien', 'last_name': 'hamet', 'is_instructor': False, 'avatar_url': 'http://testserver/media/profile_pics/einstein_EqBibwO.jpeg', 'rating': 5, 'phone': '+12125552368', 'title': '', 'description': '', 'languages': [], 'categories': [], 'baselocations': [], 'templocations': []}
         self.assertEqual(excepted, response.json())
 
-    # def test_create_nested(self):
-    #     print("Test User -> create")
-    #     # check empty
-    #     self.assertFalse(User.objects.exists())
-    #     tmp = UserSerializer(data={'email': 'truc@truc.com', 'last_name': 'hamet', 'first_name': 'bastien', 'categories': [{'category': 'KB'}]})
-    #     print(tmp.is_valid())
-    #     print(tmp.errors)
-    #     print(tmp._errors)
-    #     response = self.client.post(self.url, data={'email': '1@truc.com', 'last_name': 'hamet', 'first_name': 'bastien', 'categories': [{'category': 'KB'}]}, format='json')
-    #     print (response.json())
+        # check correct creation with nested objects
+        correct_full_user = get_full_user(0)
+        response = self.client.post(self.url, data=correct_full_user, format='json')
+        self.assertEqual(response.status_code, 201)
+        self.compare_nested(correct_full_user, response.json())
+
+    # check update 
+    def test_update(self):
+        print("Test User -> update")
+
+        """create user with 2 items per nested object"""
+
+        # check correct creation with nested objects
+        correct_full_user = get_full_user(0)
+        response = self.client.post(self.url, data=correct_full_user, format='json')
+        self.assertEqual(response.status_code, 201)
+
+        # save user info
+        self.user_id = response.json()['id']   
+        self.user_email = "put@put.com"
+        self.user_url = 'http://testserver/users/'+str(self.user_id)+'/'
+
+        # update email only
+        self.put_field_test("email", self.user_email)
+        # update first_name only
+        self.put_field_test("first_name", "fnput")
+        # update last_name only
+        self.put_field_test("last_name", "lnput")
+        # update phone only
+        self.put_field_test("phone", "+12125552000")
+        # update is_instructor only
+        self.put_field_test("is_instructor", True)
+        # # update avatar_url only
+        # self.put_field_test("avatar_url", "http://testserver/media/profile_pics/einstein.jpeg")
+        # update rating only
+        self.put_field_test("rating", 4)
+        # update title only
+        self.put_field_test("title", "tput")
+        # update description only
+        self.put_field_test("description", "dput")
+        # update all (not nested) fields
+        res = self.put_data_test(input_data=get_full_user(0))
+        self.compare_nested(get_full_user(0), res)
+        
+        """ 
+        update the nested objects
+        Write 2 nested items per nested object:
+        - 1 new item to be added to the users nested objects (to add)
+        - 1 item that was present at creation (to keep)
+        - 1 item that was present at creation with a change (to update)
+        Behavior: is that it should add the first, keep the second, update the third and remove all previous ones
+        """
+        # update all (not nested) fields
+        res = self.put_data_test(input_data=get_full_user(1))
+        self.compare_nested(get_full_user(1), res)
+    

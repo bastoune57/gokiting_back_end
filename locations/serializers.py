@@ -7,6 +7,10 @@ import logging
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
 
+
+''' DIRECT OBJECT SERIALIZERS '''
+
+
 class LocationSerializer(serializers.HyperlinkedModelSerializer):
     """
     Serializer for Location objects
@@ -15,15 +19,6 @@ class LocationSerializer(serializers.HyperlinkedModelSerializer):
         model = Location
         fields = ['url', 'city', 'country', 'longitude', 'latitude']
 
-class NestedLocationSerializer(serializers.HyperlinkedModelSerializer):
-    """
-    Serializer for nested Location objects. (get_or_create)
-    """
-    class Meta:
-        model = Location
-        fields = ['url', 'city', 'country', 'longitude', 'latitude']
-        validators = [] # remove validators for nested objects as we do not know if they already exists
-
 class BaseLocationSerializer(serializers.HyperlinkedModelSerializer):
     """
     Serializer for base Location objects
@@ -31,15 +26,6 @@ class BaseLocationSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = BaseLocation
         fields = ['url', 'user', 'location']
-
-class CreateNestedBaseLocationSerializer(serializers.HyperlinkedModelSerializer):
-    """
-    Serializer for creating nested base Location objects
-    """
-    location = NestedLocationSerializer(required=False)
-    class Meta:
-        model = BaseLocation
-        fields = ['location']
 
 class TimePeriodSerializer(serializers.HyperlinkedModelSerializer):
     """
@@ -63,6 +49,50 @@ class TempLocationSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = TempLocation
         fields = ['url', 'user', 'location', 'timeperiod']
+
+
+''' NESTED OBJECT SERIALIZERS '''
+
+class NestedTimePeriodSerializer(serializers.HyperlinkedModelSerializer):
+    """
+    Serializer for nested Location objects. (get_or_create)
+    """
+    class Meta:
+        model = TimePeriod
+        fields = ['url', 'start_date', 'end_date']
+        validators = [] # remove validators for nested objects as we do not know if they already exists
+
+class NestedLocationSerializer(serializers.HyperlinkedModelSerializer):
+    """
+    Serializer for nested Location objects. (get_or_create)
+    """
+    class Meta:
+        model = Location
+        fields = ['url', 'city', 'country', 'longitude', 'latitude']
+        validators = [] # remove validators for nested objects as we do not know if they already exists
+
+
+''' NESTED OBJECT CREATION SERIALIZERS '''
+
+
+class CreateNestedBaseLocationSerializer(serializers.HyperlinkedModelSerializer):
+    """
+    Serializer for creating nested base Location objects
+    """
+    location = NestedLocationSerializer(required=False)
+    class Meta:
+        model = BaseLocation
+        fields = ['location']
+
+class CreateNestedTempLocationSerializer(serializers.HyperlinkedModelSerializer):
+    """
+    Serializer for creating nested temp Location objects
+    """
+    location = NestedLocationSerializer(required=True)
+    timeperiod = NestedTimePeriodSerializer(required=True)
+    class Meta:
+        model = TempLocation
+        fields = ['location', 'timeperiod']
 
 def add_or_create_base_location (user, baselocations_data):
     """

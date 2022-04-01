@@ -9,7 +9,7 @@ from languages.serializers import NestedLanguageSerializer
 from categories.models import Category
 from categories.serializers import LinkedCategorySerializer
 from locations.serializers import CreateNestedBaseLocationSerializer
-from locations.serializers import TempLocationSerializer, add_or_create_base_location
+from locations.serializers import CreateNestedTempLocationSerializer, add_or_create_base_location
 
 class GroupSerializer(serializers.HyperlinkedModelSerializer):
     """
@@ -28,7 +28,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
     categories = LinkedCategorySerializer(required=False, many=True)
     languages = NestedLanguageSerializer(required=False, many=True)
     baselocations = CreateNestedBaseLocationSerializer(required=False, many=True)
-    templocations = TempLocationSerializer(required=False, many=True)
+    templocations = CreateNestedTempLocationSerializer(required=False, many=True)
     class Meta:
         model = User
         fields = ['id', 'url', 'email', 'first_name',

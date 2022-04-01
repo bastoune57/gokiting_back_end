@@ -2,24 +2,25 @@ from django.db import models
 
 # Create your models here.
 
+# define category choices
+KITEBOARD = 'KB'
+WING = 'WI'
+KITEFOIL = 'KF'
+SUP = 'SP'
+SURF = 'SF'
+# define  choices / value relations
+WATER_SPORT_CHOICES = [
+    (KITEBOARD, 'Kiteboard'),
+    (WING, 'Wingfoil'),
+    (KITEFOIL, 'Kitefoil'),
+    (SUP, 'SUP'),
+    (SURF, 'Surf'),
+]
+
 class Category (models.Model):
     """
     Category model (move to Category app?)
     """
-    # define category choices
-    KITEBOARD = 'KB'
-    WING = 'WI'
-    KITEFOIL = 'KF'
-    SUP = 'SP'
-    SURF = 'SF'
-    # define  choices / value relations
-    WATER_SPORT_CHOICES = [
-        (KITEBOARD, 'Kiteboard'),
-        (WING, 'Wingfoil'),
-        (KITEFOIL, 'Kitefoil'),
-        (SUP, 'SUP'),
-        (SURF, 'Surf'),
-    ]
     # add a category field
     category = models.CharField(
         max_length=2,

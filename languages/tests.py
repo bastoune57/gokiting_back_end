@@ -20,16 +20,17 @@ class TestLanguage(APITestCase):
         self.assertEqual(response.status_code, 400)
         # check wrong language
         response = self.client.post(self.uurl, data={'email': 'b@h.com', 'first_name': 'bastien', 'last_name': 'hamet'})
+        self.user_url = response.json()['url']
         self.assertEqual(response.status_code, 201)
-        response = self.client.post(self.url, data={'user': 'http://testserver:8000/users/1/', 'language': 'ttttttt'})
+        response = self.client.post(self.url, data={'user': self.user_url, 'language': 'ttttttt'})
         self.assertEqual(response.status_code, 400)
         # check correct creations
-        response = self.client.post(self.url, data={'user': 'http://testserver:8000/users/1/', 'language': 'en'})
+        response = self.client.post(self.url, data={'user': self.user_url, 'language': 'en'})
         self.assertEqual(response.status_code, 201)
-        response = self.client.post(self.url, data={'user': 'http://testserver:8000/users/1/', 'language': 'fr'})
+        response = self.client.post(self.url, data={'user': self.user_url, 'language': 'fr'})
         self.assertEqual(response.status_code, 201)
         # check duplicate
-        response = self.client.post(self.url, data={'user': 'http://testserver:8000/users/1/', 'language': 'en'})
+        response = self.client.post(self.url, data={'user': self.user_url, 'language': 'en'})
         self.assertEqual(response.status_code, 400)
         # check stat from previous 
         response = self.client.get(self.stat_url)
