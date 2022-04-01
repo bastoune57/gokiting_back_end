@@ -6,10 +6,18 @@ from django.contrib.auth.models import Group
 from .models import User
 
 from languages.models import Language
+from categories.models import Category
+from locations.models import BaseLocation
 
 from django.db.models import Count
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
+from django.urls import reverse_lazy
+
+import logging
+
+# Get an instance of a logger
+logger = logging.getLogger(__name__)
 
 class GroupViewSet(viewsets.ModelViewSet):
     """
@@ -75,6 +83,17 @@ class UserViewSet(viewsets.ModelViewSet):
         if language is not None:
             id_list = Language.objects.filter(language=language).values_list('user_id', flat=True)
             queryset = queryset.filter(pk__in=id_list)
+        # category filtering (nested object)
+        category = self.request.GET.get('category')
+        if category is not None:
+            id_list = Category.objects.filter(category=category).values_list('user_id', flat=True)
+            queryset = queryset.filter(pk__in=id_list)
+        # location filtering (nested object)
+        baselocation = self.request.GET.get('baselocation')
+        if baselocation is not None:
+            #logger.error(location_url)
+            id_list = BaseLocation.objects.filter(location_id=baselocation).values_list('user_id', flat=True)
+            queryset = queryset.filter(pk__in=id_list)
         
         """ SORTING filtering"""
         asc = self.request.GET.get('asc')
@@ -116,6 +135,14 @@ class UserViewSet(viewsets.ModelViewSet):
             openapi.IN_QUERY,
             description='Allows exact match filtering on language (Ex: ?language=en).',
             type=openapi.TYPE_STRING),
+            openapi.Parameter('category',
+            openapi.IN_QUERY,
+            description='Allows exact match filtering on category (Ex: ?category=KB).',
+            type=openapi.TYPE_STRING),
+            openapi.Parameter('baselocation',
+            openapi.IN_QUERY,
+            description='Allows exact match filtering on baselocation id (Ex: ?baselocation=7).',
+            type=openapi.TYPE_INTEGER),
             openapi.Parameter('asc',
             openapi.IN_QUERY,
             description='Allows ascending sorting of the results based on field names (Ex: ?asc=last_name). It is dominant compared to desc filtering.',
