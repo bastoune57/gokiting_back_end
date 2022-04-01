@@ -1,6 +1,5 @@
 from django.db import models
 from django.utils import timezone
-from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 class TimePeriod(models.Model):
@@ -18,10 +17,10 @@ class Location(models.Model):
     """
     city = models.CharField(_('city'), max_length=150, blank=False)
     country = models.CharField(_('country'), max_length=150, blank=False)
-    longitude = models.DecimalField(_('longitude'), max_digits=9, decimal_places=6, blank=False)
-    latitude = models.DecimalField(_('latitude'), max_digits=9, decimal_places=6, blank=False)
+    longitude = models.DecimalField(_('longitude'), max_digits=6, decimal_places=4, blank=False)
+    latitude = models.DecimalField(_('latitude'), max_digits=6, decimal_places=4, blank=False)
     class Meta:
-        unique_together = ("city", "country")
+        unique_together = ("city", "country", "longitude", "latitude")
     def __str__(self):
         return "{} - {}".format(self.city, self.country)
 
