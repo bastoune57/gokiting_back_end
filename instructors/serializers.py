@@ -38,18 +38,22 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
                   'templocations']
 
     
-    def remove_nested_objects(self, user):
+    def remove_nested_objects(self, user, validated_data):
         """
-        Function to remove nested objects
+        Function to remove nested objects if specified in data
         """
         # categories
-        Category.objects.filter(user=user).delete()
+        if 'categories' in validated_data.keys():
+            Category.objects.filter(user=user).delete()
         # languages
-        Language.objects.filter(user=user).delete()
+        if 'languages' in validated_data.keys():
+            Language.objects.filter(user=user).delete()
         # base locations
-        BaseLocation.objects.filter(user=user).delete()
+        if 'baselocations' in validated_data.keys():
+            BaseLocation.objects.filter(user=user).delete()
         # temp locations
-        TempLocation.objects.filter(user=user).delete()
+        if 'templocations' in validated_data.keys():
+            TempLocation.objects.filter(user=user).delete()
 
     def update_nested_objects(self, user, validated_data):
         """
@@ -134,7 +138,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         instance.description = validated_data.get('description', instance.description)
         instance.save()
         # remove all nested objects
-        self.remove_nested_objects(instance) 
+        self.remove_nested_objects(instance, validated_data)
         # Update Nested objects
         self.update_nested_objects(instance, validated_data)
         return instance

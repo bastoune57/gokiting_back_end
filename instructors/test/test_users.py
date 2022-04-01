@@ -54,28 +54,6 @@ def get_full_user (id):
 class TestUser(APITestCase):
     url = reverse_lazy('user-list')
 
-    def put_data_test(self, input_data):
-        """ Test update (PUT) using a data to be sent (nested object not verified)"""
-        response = self.client.put(self.user_url, data=input_data, format='json')
-        res = response.json().copy()
-        response.json().pop("languages")
-        response.json().pop("categories")
-        response.json().pop("baselocations")
-        response.json().pop("templocations")
-        input_data.pop("languages")
-        input_data.pop("categories")
-        input_data.pop("baselocations")
-        input_data.pop("templocations")
-        self.assertEqual(response.status_code, 200)       
-        return res
-
-    def put_field_test(self, name, value):
-        """ Test update (PUT) of any direct field of user """
-        response = self.client.put(self.user_url, data={name: value}, format='json')
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json()[name], value)
-        return response
-
     def compare_nested (self, src, dest):
         # check languages correctness
         self.assertEqual(len(src["languages"]), len(dest["languages"]))
@@ -93,6 +71,34 @@ class TestUser(APITestCase):
             self.assertEqual(src["baselocations"][i]["location"]["longitude"], dest["baselocations"][i]["location"]["longitude"])
             self.assertEqual(src["baselocations"][i]["location"]["latitude"], dest["baselocations"][i]["location"]["latitude"])
 
+    def put_data_test(self, input_data):
+        """ Test update (PUT) using a data to be sent (nested object not verified)"""
+        response = self.client.put(self.user_url, data=input_data, format='json')
+        self.assertEqual(response.status_code, 200)    
+        res = response.json().copy()
+        if 'categories' not in input_data.keys():
+            response.json().pop("categories")
+            input_data.pop("categories")
+        if 'languages' not in input_data.keys():
+            response.json().pop("languages")
+            input_data.pop("languages")
+        if 'baselocations' not in input_data.keys():
+            response.json().pop("baselocations")
+            input_data.pop("baselocations")
+        if 'templocations' not in input_data.keys():
+            response.json().pop("templocations")
+            input_data.pop("templocations")
+        self.compare_nested(input_data, res)   
+        return res
+
+    def put_field_test(self, name, value):
+        """ Test update (PUT) of any direct field of user """
+        get_res = self.client.get(self.user_url)
+        response = self.client.put(self.user_url, data={name: value}, format='json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()[name], value)
+        self.compare_nested(get_res.json(),response.json()) # check nested where not modified
+        return response
 
     def test_create(self):
         print("Test User -> create")
@@ -144,7 +150,7 @@ class TestUser(APITestCase):
         self.user_url = 'http://testserver/users/'+str(self.user_id)+'/'
 
         # update email only
-        self.put_field_test("email", self.user_email)
+        response = self.put_field_test("email", self.user_email)
         # update first_name only
         self.put_field_test("first_name", "fnput")
         # update last_name only
@@ -163,7 +169,6 @@ class TestUser(APITestCase):
         self.put_field_test("description", "dput")
         # update all (not nested) fields
         res = self.put_data_test(input_data=get_full_user(0))
-        self.compare_nested(get_full_user(0), res)
         
         """ 
         update the nested objects
@@ -175,5 +180,3 @@ class TestUser(APITestCase):
         """
         # update all (not nested) fields
         res = self.put_data_test(input_data=get_full_user(1))
-        self.compare_nested(get_full_user(1), res)
-    
