@@ -29,6 +29,19 @@ docker-compose up
 Only required one the first use of the DB (or after the "pgadmin" volume in Docker is removed erasing the DB)  
 ```
 docker exec -it server-web-1 python manage.py migrate
+```  
+
+Depending on folder´s name:
+```
+docker exec -it folder_name_backend-web-1 python manage.py migrate
+```
+or get the container id with:
+```
+docker ps --all
+```
+... and use id instead of container name wors case.
+```
+docker exec -it 78284ba42fe9 python manage.py migrate
 ```
 
 <br>
