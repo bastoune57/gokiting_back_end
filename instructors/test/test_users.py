@@ -133,6 +133,11 @@ class TestUser(APITestCase):
         self.assertEqual(response.status_code, 201)
         self.compare_nested(correct_full_user, response.json())
 
+        # check wrong creation with identical nested objects
+        correct_full_user['languages'] = [{'language': 'aa'},{'language': 'ab'},{'language': 'ab'}]
+        response = self.client.post(self.url, data=correct_full_user, format='json')
+        self.assertEqual(response.status_code, 400)
+
     # check update 
     def test_update(self):
         print("Test User -> update")

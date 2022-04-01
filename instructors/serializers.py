@@ -78,11 +78,11 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         # if there were categories then add it/them
         if categories_data is not None:
             for item in categories_data:
-                Category.objects.create(user=user, **item)
+                Category.objects.get_or_create(user=user, **item)
         # if there were languages then add it/them
         if languages_data is not None:
             for item in languages_data:
-                Language.objects.create(user=user, **item)
+                Language.objects.get_or_create(user=user, **item)
         # if there were base locations then add it/them
         if baselocations_data is not None:
             locations_list = add_or_create_base_location(user=user, baselocations_data=baselocations_data)
