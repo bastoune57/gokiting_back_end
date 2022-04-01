@@ -17,8 +17,8 @@ class Location(models.Model):
     """
     city = models.CharField(_('city'), max_length=150, blank=False)
     country = models.CharField(_('country'), max_length=150, blank=False)
-    longitude = models.DecimalField(_('longitude'), max_digits=6, decimal_places=4, blank=False)
-    latitude = models.DecimalField(_('latitude'), max_digits=6, decimal_places=4, blank=False)
+    longitude = models.DecimalField(_('longitude'), max_digits=7, decimal_places=4, blank=False) #-+180°
+    latitude = models.DecimalField(_('latitude'), max_digits=6, decimal_places=4, blank=False) #-+90°
     class Meta:
         unique_together = ("city", "country", "longitude", "latitude")
     def __str__(self):
