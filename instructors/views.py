@@ -1,6 +1,6 @@
 from rest_framework import viewsets
 from rest_framework import permissions
-from .serializers import UserSerializer#, ModifyUserSerializer
+from .serializers import UserSerializer, ModifyUserSerializer
 from .serializers import GroupSerializer
 from django.contrib.auth.models import Group
 from .models import User
@@ -40,10 +40,10 @@ class UserViewSet(viewsets.ModelViewSet):
         # create, list, retrieve, update, partial_update, and destroy
         # POST,   GET,  GET,      PUT,    PATCH               DELETE
         """
-        # if self.action in ['update', 'partial_update']: 
-        #     return ModifyUserSerializer
+        if self.action in ['update', 'partial_update']: 
+            return ModifyUserSerializer
         # if self.action == 'retrieve':
-        #     return UserDetailsSerializer
+        #     return UserSerializer
         return UserSerializer
 
     def get_queryset(self):

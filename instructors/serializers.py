@@ -139,9 +139,9 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         self.update_nested_objects(instance, validated_data)
         return instance
 
-# # Serializer for users objects to use for PUT and PATCH request
-# class ModifyUserSerializer(UserSerializer):
-#     def get_fields(self, *args, **kwargs):
-#         fields = super(ModifyUserSerializer, self).get_fields(*args, **kwargs)
-#         fields['email'].read_only = True
-#         return fields
+# Serializer for users objects to use for PUT and PATCH request
+class ModifyUserSerializer(UserSerializer):
+    def get_fields(self, *args, **kwargs):
+        fields = super(ModifyUserSerializer, self).get_fields(*args, **kwargs)
+        fields['email'].required = False#read_only = True
+        return fields

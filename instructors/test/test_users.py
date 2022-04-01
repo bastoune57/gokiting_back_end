@@ -71,10 +71,7 @@ class TestUser(APITestCase):
 
     def put_field_test(self, name, value):
         """ Test update (PUT) of any direct field of user """
-        if name == "email":
-            response = self.client.put(self.user_url, data={name: value}, format='json')
-        else:
-            response = self.client.put(self.user_url, data={"email": self.user_email, name: value}, format='json')
+        response = self.client.put(self.user_url, data={name: value}, format='json')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.json()[name], value)
         return response
