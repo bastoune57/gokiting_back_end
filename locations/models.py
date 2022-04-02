@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 class TimePeriod(models.Model):
     """
@@ -17,8 +18,8 @@ class Location(models.Model):
     """
     city = models.CharField(_('city'), max_length=150, blank=False)
     country = models.CharField(_('country'), max_length=150, blank=False)
-    longitude = models.DecimalField(_('longitude'), max_digits=7, decimal_places=4, blank=False) #-+180°
-    latitude = models.DecimalField(_('latitude'), max_digits=6, decimal_places=4, blank=False) #-+90°
+    longitude = models.DecimalField(_('longitude'), max_digits=7, decimal_places=4, blank=False, validators=[MinValueValidator(-180.0), MaxValueValidator(+180)])
+    latitude = models.DecimalField(_('latitude'), max_digits=6, decimal_places=4, blank=False, validators=[MinValueValidator(-90.0), MaxValueValidator(+90)])
     class Meta:
         unique_together = ("city", "country", "longitude", "latitude")
     def __str__(self):
