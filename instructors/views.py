@@ -7,7 +7,7 @@ from .models import User
 
 from languages.models import Language
 from categories.models import Category
-from locations.models import BaseLocation
+from locations.models import BaseLocation, Location
 
 from django.db.models import Count
 from drf_yasg.utils import swagger_auto_schema
@@ -94,6 +94,30 @@ class UserViewSet(viewsets.ModelViewSet):
             #logger.error(location_url)
             id_list = BaseLocation.objects.filter(location_id=baselocation).values_list('user_id', flat=True)
             queryset = queryset.filter(pk__in=id_list)
+        # base location city filtering (nested object)
+        bcity = self.request.GET.get('bcity')
+        if bcity is not None:
+            location_list = Location.objects.filter(city=bcity).values_list('id', flat=True)
+            id_list = BaseLocation.objects.filter(location_id__in=location_list).values_list('user_id', flat=True)
+            queryset = queryset.filter(pk__in=id_list)
+        # base location country filtering (nested object)
+        bcountry = self.request.GET.get('bcountry')
+        if bcountry is not None:
+            location_list = Location.objects.filter(country=bcountry).values_list('id', flat=True)
+            id_list = BaseLocation.objects.filter(location_id__in=location_list).values_list('user_id', flat=True)
+            queryset = queryset.filter(pk__in=id_list)
+        # base location latitude filtering (nested object)
+        blatitude = self.request.GET.get('blatitude')
+        if blatitude is not None:
+            location_list = Location.objects.filter(latitude=blatitude).values_list('id', flat=True)
+            id_list = BaseLocation.objects.filter(location_id__in=location_list).values_list('user_id', flat=True)
+            queryset = queryset.filter(pk__in=id_list)
+        # base location longitude filtering (nested object)
+        blongitude = self.request.GET.get('blongitude')
+        if blongitude is not None:
+            location_list = Location.objects.filter(longitude=blongitude).values_list('id', flat=True)
+            id_list = BaseLocation.objects.filter(location_id__in=location_list).values_list('user_id', flat=True)
+            queryset = queryset.filter(pk__in=id_list)
         
         """ SORTING filtering"""
         asc = self.request.GET.get('asc')
@@ -143,6 +167,22 @@ class UserViewSet(viewsets.ModelViewSet):
             openapi.IN_QUERY,
             description='Allows exact match filtering on baselocation id (Ex: ?baselocation=7).',
             type=openapi.TYPE_INTEGER),
+            openapi.Parameter('bcity',
+            openapi.IN_QUERY,
+            description='Allows exact match filtering on baselocation city (Ex: ?bcity=Cabarete).',
+            type=openapi.TYPE_STRING),
+            openapi.Parameter('bcountry',
+            openapi.IN_QUERY,
+            description='Allows exact match filtering on baselocation country (Ex: ?bcountry=Dominican Republic).',
+            type=openapi.TYPE_STRING),
+            openapi.Parameter('blongitude',
+            openapi.IN_QUERY,
+            description='Allows exact match filtering on baselocation longitude (Ex: ?blongitude=19.0).',
+            type=openapi.TYPE_STRING),
+            openapi.Parameter('blatitude',
+            openapi.IN_QUERY,
+            description='Allows exact match filtering on baselocation latitude (Ex: ?blatitude=-70.0).',
+            type=openapi.TYPE_STRING),
             openapi.Parameter('asc',
             openapi.IN_QUERY,
             description='Allows ascending sorting of the results based on field names (Ex: ?asc=last_name). It is dominant compared to desc filtering.',
