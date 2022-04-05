@@ -1,6 +1,7 @@
 from django.urls import reverse_lazy
 from rest_framework.test import APITestCase
 from .models import BaseLocation, Location
+from .helpers import *
 
 class TestLocation(APITestCase):
     uurl = reverse_lazy('user-list')
@@ -75,3 +76,32 @@ class TestLocation(APITestCase):
         # check duplicate
         response = self.client.post(self.burl, data={'user': user_id_1, 'location': loc_id_1})
         self.assertEqual(response.status_code, 400)
+
+    def test_helpers(self):
+        print("Test location -> helper functions")    
+        lat1 = 51.5007
+        lon1 = 0.1246
+        lat2 = 40.6892
+        lon2 = 74.0445
+        # get distance test
+        res = get_distance_from_coordinates (lat1, lon1,lat2, lon2)
+        #print (res, "km")
+        self.assertEqual(round(res,4), round(5574.840456848553,4))
+
+        # correct creations
+        response = self.client.post(self.url, data={'city': 'tci', 'country': 'tco', 'longitude': '8.9', 'latitude': '8.9'})
+        self.assertEqual(response.status_code, 201)
+        response = self.client.post(self.url, data={'city': 'tci1', 'country': 'tco1', 'longitude': '0.1', 'latitude': '0.1'})
+        self.assertEqual(response.status_code, 201)
+        response = self.client.post(self.url, data={'city': 'tci2', 'country': 'tco1', 'longitude': '-0.2', 'latitude': '0.1'})
+        self.assertEqual(response.status_code, 201)
+        response = self.client.post(self.url, data={'city': 'tci3', 'country': 'tco1', 'longitude': '-0.002', 'latitude': '0.1'})
+        self.assertEqual(response.status_code, 201)
+        # another test on queryset 
+        queryset = Location.objects.all()
+        target = {'latitude': 0.0, 'longitude':0.1}
+        res = sort_to_closest(queryset, target, 2)
+        #print(res)
+        self.assertEqual(len(res), 2)
+
+
