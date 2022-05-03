@@ -17,7 +17,7 @@ class LocationSerializer(serializers.HyperlinkedModelSerializer):
     """
     class Meta:
         model = Location
-        fields = ['url', 'city', 'country', 'longitude', 'latitude']
+        fields = ['id', 'url', 'city', 'country', 'longitude', 'latitude']
 
 class BaseLocationSerializer(serializers.HyperlinkedModelSerializer):
     """
@@ -25,7 +25,7 @@ class BaseLocationSerializer(serializers.HyperlinkedModelSerializer):
     """
     class Meta:
         model = BaseLocation
-        fields = ['url', 'user', 'location']
+        fields = ['id', 'url', 'user', 'location']
 
 class TimePeriodSerializer(serializers.HyperlinkedModelSerializer):
     """
@@ -33,7 +33,7 @@ class TimePeriodSerializer(serializers.HyperlinkedModelSerializer):
     """
     class Meta:
         model = TimePeriod
-        fields = ['url', 'start_date', 'end_date']
+        fields = ['id', 'url', 'start_date', 'end_date']
     def validate(self, data):
         """
         Check that the start is before the stop.
@@ -48,7 +48,7 @@ class TempLocationSerializer(serializers.HyperlinkedModelSerializer):
     """
     class Meta:
         model = TempLocation
-        fields = ['url', 'user', 'location', 'timeperiod']
+        fields = ['id', 'url', 'user', 'location', 'timeperiod']
 
 
 ''' NESTED OBJECT SERIALIZERS '''
