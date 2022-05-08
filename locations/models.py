@@ -23,7 +23,7 @@ class Location(models.Model):
     class Meta:
         unique_together = ("city", "country", "longitude", "latitude")
     def __str__(self):
-        return "{} - {}".format(self.city, self.country)
+        return "{} - {}. Lat,Lon: {},{}.".format(self.city, self.country, self.latitude, self.longitude)
 
 class BaseLocation(models.Model):
     """

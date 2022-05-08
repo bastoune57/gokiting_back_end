@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'rest_framework', # framework to generate REST API
     'corsheaders', # to check connexions origin
     'drf_yasg', # framework to generate REST API documentation
+    'django_filters', # drf url filtering
 ]
 
 MIDDLEWARE = [
@@ -165,6 +166,7 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 10,
     #'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
 }
 
 CORS_ORIGIN_ALLOW_ALL = True

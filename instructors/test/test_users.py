@@ -127,16 +127,20 @@ class TestUser(APITestCase):
         excepted = {'id': user_id, 'url': 'http://testserver/users/'+str(user_id)+'/', 'email': 'b@h.com', 'first_name': 'bastien', 'last_name': 'hamet', 'is_instructor': False, 'avatar_url': 'http://testserver/media/profile_pics/einstein_EqBibwO.jpeg', 'rating': 5, 'phone': '+12125552368', 'title': '', 'description': '', 'languages': [], 'categories': [], 'baselocations': [], 'templocations': []}
         self.assertEqual(excepted, response.json())
 
+        # XXX TODO check wrong nested ? 
+
         # check correct creation with nested objects
-        correct_full_user = get_full_user(0)
+        userId = 0
+        correct_full_user = get_full_user(userId)
         response = self.client.post(self.url, data=correct_full_user, format='json')
         self.assertEqual(response.status_code, 201)
         self.compare_nested(correct_full_user, response.json())
-
-        # check wrong creation with identical nested objects
+        # check semi-wrong creation with identical nested objects 
+        userId +=1
+        correct_full_user = get_full_user(userId)
         correct_full_user['languages'] = [{'language': 'aa'},{'language': 'ab'},{'language': 'ab'}]
         response = self.client.post(self.url, data=correct_full_user, format='json')
-        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 201)
 
     # check update 
     def test_update(self):
